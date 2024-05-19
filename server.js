@@ -35,8 +35,6 @@ app.put('/:id', async (req, res, next) => {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred while fetching data' });
   }
-
-  next();
   next();
 });
 
