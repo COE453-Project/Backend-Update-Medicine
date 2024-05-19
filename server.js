@@ -18,6 +18,9 @@ app.put('/:id', async (req, res, next) => {
     productionDate:  req.body.productionDate,
     expiryDate: req.body.expiryDate
   };
+
+  let status = 0;
+  let content = '';
   const url = `${db}/${id}`
   await fetch(url, {
     method: 'PUT',
@@ -27,14 +30,15 @@ app.put('/:id', async (req, res, next) => {
     body: JSON.stringify(medicineData)
   })
   .then(async response => {
-    res.status(response.status)
-    res.json(await response.json());
+    status = response.status
+    content = await response.json()
   })
   .catch(error => {
-    res.status(500)
+    status = 500
+    content = 'Internal server error occurred'
     console.error('An error occurred:', error)
   });
-  res.send()
+  res.status(status).send(content);
   next();
 });
 
