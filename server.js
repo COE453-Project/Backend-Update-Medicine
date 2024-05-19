@@ -9,7 +9,7 @@ const db = 'https://backend-database-olz2xjbmza-uc.a.run.app'
 app.use(express.json());
 app.use(cors());
 
-app.put('/:id', (req, res, next) => {
+app.put('/:id', async (req, res, next) => {
   // Get the details of the medicine
   const id = req.params.id
   const medicineData = {
@@ -19,22 +19,22 @@ app.put('/:id', (req, res, next) => {
     expiryDate: req.body.expiryDate
   };
   const url = `${db}/${id}`
-  fetch(url, {
+  await fetch(url, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(medicineData)
   })
-  .then(response => {
-    console.log(data);
-    res.status(200)
-    res.json(response);
+  .then(async response => {
+    res.status(response.status)
+    res.json(await response.json());
   })
   .catch(error => {
-    res.status(500).send('Internal server error occurred');
+    res.status(500)
     console.error('An error occurred:', error)
   });
+  res.send()
   next();
 });
 
