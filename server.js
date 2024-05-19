@@ -26,12 +26,14 @@ app.put('/:id', async (req, res, next) => {
     },
     body: JSON.stringify(medicineData)
   }
-  const response = await fetch(url,options)
-  const data = await response.json()
-  if (data){
-    res.status(200).send(data)
-  } else{
-    res.status(500).send('Server side error')
+  try{
+    const response = await fetch(url,options)
+    const data = await response.json()
+    res.status(200)
+    res.body(data)
+  } catch{
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
   }
 });
 
