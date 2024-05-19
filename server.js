@@ -19,26 +19,24 @@ app.put('/:id', async (req, res, next) => {
     expiryDate: req.body.expiryDate
   };
 
-  let status = 0;
-  let content = '';
   const url = `${db}/${id}`
-  await fetch(url, {
+  let options = {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(medicineData)
-  })
-  .then(async response => {
-    status = response.status
-    content = await response.json()
-  })
-  .catch(error => {
-    status = 500
-    content = 'Internal server error occurred'
-    console.error('An error occurred:', error)
-  });
-  res.status(status).send(content);
+    body: JSON.stringify(medicineData) // Stringify and include the medicineData in the body of your request
+  };
+  try {
+    const response = await fetch(url,options)
+    res.status(response.status)
+    res.json(await response.json())
+  } catch {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
+  }
+
+  next();
   next();
 });
 
